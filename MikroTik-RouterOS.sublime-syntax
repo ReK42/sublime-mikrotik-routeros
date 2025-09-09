@@ -1,0 +1,37 @@
+%YAML 1.2
+---
+name: MikroTik RouterOS
+file_extensions: [conf, cfg]
+first_line_match: '^# .+ by RouterOS'
+scope: source.routeros
+
+contexts:
+  main:
+    - match: '#.*'
+      scope: comment.routeros
+
+    - match: '"'
+      push: string
+
+    - match: '^/.+'
+      scope: entity.name.function.routeros
+
+    - match: '\b(add|comment|disable|enable|export|find|get|move|print|remove|set|required)(?=\s)'
+      scope: keyword.section.routeros
+
+    - match: '(?<=\s)[\w-]+(?=\s)'
+      scope: variable.function.routeros
+
+    - match: '[\[\]=,!]|(?<=[^/])/(?=[^/])'
+      scope: variable.parameter.function.routeros
+
+    - match: '\b([^=\s]+)(?==)'
+      captures:
+        1: string.unquoted.routeros
+
+  string:
+    - meta_scope: comment.string.routeros
+    - match: '\\.'
+      scope: constant.character.escape.routeros
+    - match: '"'
+      pop: true
